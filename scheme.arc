@@ -8,9 +8,9 @@
 
 (def scheme-deepcopy (x)
   (if (is x scheme-t)     t
-      (is x scheme-f)     nil
-      (scheme-void? x)    nil
-      (is x scheme-nul)   nil
+      (is x scheme-f)     ()
+      (scheme-void? x)    ()
+      (is x scheme-nul)   ()
 
       (scheme-vector? x)  (w/table new
                            (each (k . v) (vector->list x)
@@ -24,6 +24,3 @@
       (acons x)           (map scheme-deepcopy x)
 
                           x))
-
-($:require (file "lib/json.ss"))
-(def json-read(s) (scheme-deepcopy (($ read-json) s)))
