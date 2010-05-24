@@ -18,9 +18,6 @@
 
 (xdef cwd current-directory)
 (xdef arc-dir* arc-dir*)
-(aload "lib/include.arc")
-
-(aload "lib/scheme.arc")
 
 (current-directory start-dir*)
 
