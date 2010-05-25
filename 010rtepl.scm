@@ -19,6 +19,7 @@
 (define (ytrans expr)
   (cond
     [(null? expr)   ()]
+    [(and (list? expr) (eq? (car expr) '$))   (cadr expr)]
     [(and (list? expr) (symbol? (car expr)))  (map ytrans (ftrans expr))]
     [(list? expr)   (map ytrans expr)]
     ; atoms
