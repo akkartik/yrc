@@ -68,7 +68,7 @@
            (params  (car macinfo))
            (body    (cdr macinfo))
            (fn      (eval `(lambda ,params ,body))))
-      (fn args))
+      (apply fn args))
     (cons m args)))
 
 (define (ytrans expr)
