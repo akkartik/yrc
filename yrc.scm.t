@@ -8,6 +8,11 @@
        (display " got: ") (display a)
        (newline))]))
 
+(define (always-be-true a b) #t)
+(define dummy '_)
+; preallocated vars to aid rollback
+(define testa 0)
+
 (define (ytest filename)
   (let ([c  (char->integer (string-ref filename 0))])
     (if (and (>= c (char->integer #\0))
