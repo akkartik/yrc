@@ -5,23 +5,23 @@
       (eq? 'nil x)))
 
 (define (type x)
-  (cond ((tagged? x)        (vector-ref x 1))
-        ((macro? x)         'macro)
-        ((pair? x)          'cons)
-        ((symbol? x)        'sym)
-        ((ac-null? x)       'sym)     ; holdover from arc
-        ((procedure? x)     'fn)
-        ((char? x)          'char)
-        ((string? x)        'string)
-        ((exint? x)         'int)
-        ((number? x)        'num)
-        ((hash-table? x)    'table)
-        ((output-port? x)   'output)
-        ((input-port? x)    'input)
-        ((tcp-listener? x)  'socket)
-        ((exn? x)           'exception)
-        ((thread? x)        'thread)
-        (#t                 (error "Type: unknown type" x))))
+  (cond [(tagged? x)        (vector-ref x 1)]
+        [(macro? x)         'macro]
+        [(pair? x)          'cons]
+        [(symbol? x)        'sym]
+        [(ac-null? x)       'sym]     ; holdover from arc
+        [(procedure? x)     'fn]
+        [(char? x)          'char]
+        [(string? x)        'string]
+        [(exint? x)         'int]
+        [(number? x)        'num]
+        [(hash-table? x)    'table]
+        [(output-port? x)   'output]
+        [(input-port? x)    'input]
+        [(tcp-listener? x)  'socket]
+        [(exn? x)           'exception]
+        [(thread? x)        'thread]
+        [#t                 (error "Type: unknown type" x)]))
 
 (define (literal? x)
   (or (boolean? x)
@@ -37,8 +37,8 @@
   (and (vector? x) (eq? (vector-ref x 0) 'tagged)))
 
 (define (annotate type rep)
-  (cond ((eqv? (type rep) type)   rep)
-        (#t                       (vector 'tagged type rep))))
+  (cond [(eqv? (type rep) type)   rep]
+        [#t   (vector 'tagged type rep)]))
 
 (define (rep x)
   (if (tagged? x)

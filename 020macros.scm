@@ -21,10 +21,10 @@
   (let ([m    (car expr)]
         [args (cdr expr)])
     (if (macro? m)
-      (let* ((macinfo (hash-ref macros* m))
-             (params  (car macinfo))
-             (body    (cdr macinfo))
-             (fn      (eval `(lambda ,params ,body))))
+      (let* ([macinfo (hash-ref macros* m)]
+             [params  (car macinfo)]
+             [body    (cdr macinfo)]
+             [fn      (eval `(lambda ,params ,body))])
         (apply fn args))
       (cons m args))))
 

@@ -9,14 +9,14 @@
        (newline))]))
 
 (define (ytest filename)
-  (let ((c (char->integer (string-ref filename 0))))
+  (let ([c  (char->integer (string-ref filename 0))])
     (if (and (>= c (char->integer #\0))
              (<= c (char->integer #\9)))
-      (let* ((len (string-length filename))
-             (ext (substring filename (- len 6))))
-        (cond ((equal? ext ".yrc.t")  (yload filename)) ; yload not defined yet
-              ((equal? ext ".scm.t")  (load filename)))))))
+      (let* ([len   (string-length filename)]
+             [ext   (substring filename (- len 6))])
+        (cond [(equal? ext ".yrc.t")  (yload filename)] ; yload not defined yet
+              [(equal? ext ".scm.t")  (load filename)])))))
 
 (map (lambda(x) (ytest (path->string x)))
      (directory-list "."))
-nil
+(void)
