@@ -17,11 +17,15 @@
     [(mac name args body)
      (hash-set! macros* 'name (cons 'args 'body))]))
 
-(define (mac-call m args)
-  (if (macro? m)
-    (let* ((macinfo (hash-ref macros* m))
-           (params  (car macinfo))
-           (body    (cdr macinfo))
-           (fn      (eval `(lambda ,params ,body))))
-      (apply fn args))
-    (cons m args)))
+(define (macro-transform expr)
+  (let ([m    (car expr)]
+        [args (cdr expr)])
+    (if (macro? m)
+      (let* ((macinfo (hash-ref macros* m))
+             (params  (car macinfo))
+             (body    (cdr macinfo))
+             (fn      (eval `(lambda ,params ,body))))
+        (apply fn args))
+      (cons m args))))
+
+(add-hook macro-transform functional-transforms)
