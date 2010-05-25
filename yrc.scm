@@ -59,8 +59,10 @@
           expansion))
       e))
 
-(define (mac name args body)
-  (hash-set! macros* name (cons args body)))
+(define-syntax mac
+  (syntax-rules()
+    [(mac name args body)
+     (hash-set! macros* 'name (cons 'args 'body))]))
 
 (define (mac-call m args)
   (if (macro? m)
