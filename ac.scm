@@ -841,7 +841,7 @@
   (cond ((ar-tagged? x)     (vector-ref x 1))
         ((pair? x)          'cons)
         ((symbol? x)        'sym)
-        ((ac-null? x)          'sym)
+        ((ac-null? x)       'sym)
         ((procedure? x)     'fn)
         ((char? x)          'char)
         ((string? x)        'string)
