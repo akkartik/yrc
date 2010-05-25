@@ -25,3 +25,5 @@
            (fn      (eval `(lambda ,params ,body))))
       (apply fn args))
     (cons m args)))
+
+(add-hook mac-call ytrans functional-position)
