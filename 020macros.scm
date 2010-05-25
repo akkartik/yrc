@@ -15,10 +15,7 @@
 (define-syntax mac
   (syntax-rules()
     [(mac name args body ...)
-     (hash-set! macros* 'name (begin (display '(begin body ...))
-                                     (newline)
-                                     (cons 'args '(list 'begin body ...))))]))
-;?      (hash-set! macros* 'name (cons 'args 'body))]))
+     (hash-set! macros* 'name (cons 'args '(list 'begin body ...)))]))
 
 (define (macro-transform expr)
   (let ([m    (car expr)]

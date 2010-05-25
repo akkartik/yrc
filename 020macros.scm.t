@@ -24,7 +24,7 @@
       `(begin ,(void) (+ 1 3)))
 
 (mac foo5 (a) (+ 1 1) `(+ 1 ,a))
-(test "multi-statement mac bodies work correctly"
+(test "multi-statement mac bodies work correctly - 2"
       (ytrans '(foo5 3))
     should equal?
       '(begin 2 (+ 1 3)))
