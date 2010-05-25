@@ -1,3 +1,5 @@
+; read Transform eval print loop
+
 ; lists of functions of one argument; beware infinite loops
 (define functional-transforms ())
 (define atom-transforms ())
@@ -34,6 +36,7 @@
     (let ([new  ((car transforms) expr)])
       (apply-all-transforms-once new (cdr transforms)))))
 
+; not guaranteed to converge; that's up to the transforms
 (define (converge expr transforms)
   (let ([new  (apply-all-transforms-once expr transforms)])
     (if (equal? expr new)
