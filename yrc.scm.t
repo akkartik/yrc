@@ -8,31 +8,15 @@
        (display " got: ") (display a)
        (newline))]))
 
-
+(define (ytest filename)
+  (let ((c (char->integer (string-ref filename 0))))
+    (if (and (>= c (char->integer #\0))
+             (<= c (char->integer #\9)))
+      (let* ((len (string-length filename))
+             (ext (substring filename (- len 6))))
+        (cond ((equal? ext ".yrc.t")  (yload filename)) ; yload not defined yet
+              ((equal? ext ".scm.t")  (load filename)))))))
 
-(mac foo (a) `(+ 1 ,a))
-(test "macro call expands"
-      (ytrans '(foo 3))
-    should equal?
-      '(+ 1 3))
-
-(define (foo2 a) a)
-(mac foo3 (a) `(+ 1 ,(foo2 a)))
-(test "macro call gets around phase separation"
-      (ytrans '(foo3 3))
-    should equal?
-      '(+ 1 3))
-
-; XXX multi-stmt macros
-
-(yeval '(def foo4(a) (+ 1 a)))
-(test "def is lisp defun"
-      (yeval '(foo4 3))
-    should equal?
-      4)
-
-(yeval '(def foo5() 3))
-(test "def works with 0 args"
-      (yeval '(foo5))
-    should equal?
-      3)
+(map (lambda(x) (ytest (path->string x)))
+     (directory-list "."))
+nil
