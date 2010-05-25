@@ -7,7 +7,7 @@
   (if (and (pair? e) (macro? (car e)))
       (let ((expansion (apply (hash-ref macros* (car e))
                               (cdr e))))
-        (if (ac-null? once)
+        (if (yfalse? once)
           (macex expansion)
           expansion))
       e))
@@ -25,5 +25,3 @@
            (fn      (eval `(lambda ,params ,body))))
       (apply fn args))
     (cons m args)))
-
-(add-hook mac-call ytrans functional-position)

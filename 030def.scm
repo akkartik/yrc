@@ -1,5 +1,5 @@
 (mac def(name args . body)
-  (if (ac-null? args)
+  (if (yfalse? args)
     `(define (,name)
        ,@body)
     `(define ,(cons name args)

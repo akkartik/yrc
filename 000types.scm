@@ -30,6 +30,9 @@
       (number? x)
       (eq? x ())))
 
+(define (yfalse? x)
+  (ac-null? x))
+
 (define (tagged? x)
   (and (vector? x) (eq? (vector-ref x 0) 'tagged)))
 
