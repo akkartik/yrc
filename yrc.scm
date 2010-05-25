@@ -84,13 +84,22 @@
     [#t
       expr]))
 
+(define (yeval expr)
+  (eval (ytrans expr)))
+
 (define (yrepl)
   (display "yrc> ")
   (let* ((expr (read))
          (scmexpr (ytrans expr))
          (val (eval scmexpr)))
-    (write val)
-    (newline)
+    (write val)(newline)
     (yrepl)))
+
+(mac def(name args . body)
+  (if (ac-null? args)
+    `(define (,name)
+       ,@body)
+    `(define ,(cons name args)
+       ,@body)))
 
 (yrepl)
