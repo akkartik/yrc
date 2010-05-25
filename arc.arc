@@ -1791,9 +1791,7 @@
 (mac redef(var expr)
   `(= ,var ,expr))
 
-(= ac-denil       ($ ac-denil))
 (= ac-global-name ($ ac-global-name))
-(= ac-niltree     ($ ac-niltree))
 
 (mac ac-set-global (name val)
   (w/uniq (gname v)
@@ -1838,14 +1836,14 @@
        (let ,storage (thread-cell ,val)
          (fn args
            (if args
-             (ac-niltree:$:thread-cell-set! ,storage (car args))
-             (ac-niltree:$:thread-cell-ref ,storage)))))))
+             ($:thread-cell-set! ,storage (car args))
+             ($:thread-cell-ref ,storage)))))))
 
 (def thread-send(thd v)
-  (ac-niltree:$:thread-send thd v))
+  ($:thread-send thd v))
 (def thread-receive()
-  (ac-niltree:$:thread-receive))
+  ($:thread-receive))
 (def thread-try-receive()
-  (ac-niltree:$:thread-try-receive))
+  ($:thread-try-receive))
 (def thread-rewind-receive args
-  (ac-niltree:$:thread-rewind-receive (ac-denil ,args)))
+  ($:thread-rewind-receive ,args))

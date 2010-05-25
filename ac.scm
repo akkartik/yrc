@@ -22,7 +22,7 @@
         ((symbol? s) (ac-var-ref s env))
         ((ssyntax? (xcar s)) (ac (cons (expand-ssyntax (car s)) (cdr s)) env))
         ((eq? (xcar s) '$) (ac-$ (cadr s) env))
-        ((eq? (xcar s) 'quote) (list 'quote (ac-niltree (cadr s))))
+        ((eq? (xcar s) 'quote) (list 'quote (cadr s)))
         ((eq? (xcar s) 'quasiquote) (ac-qq (cadr s) env))
         ((eq? (xcar s) 'if) (ac-if (cdr s) env))
         ((eq? (xcar s) 'fn) (ac-fn (cadr s) (cddr s) env))
@@ -250,8 +250,7 @@
 (define (ac-qq args env)
   (list 'quasiquote (ac-qqx args
                       (lambda (x) (list 'unquote (ac x env)))
-                      (lambda (x) (list 'unquote-splicing
-                                    (list 'ar-nil-terminate (ac x env)))))))
+                      (lambda (x) (list 'unquote-splicing (ac x env))))))
 
 ; process the argument of a quasiquote. keep track of
 ; depth of nesting. handle unquote only at top level (level = 1).
@@ -317,7 +316,7 @@
       (ac-complex-fn args body env)
       (ac-nameit
        (ac-dbname env)
-       `(lambda ,(let ((a (ac-denil args))) (if (eqv? a ()) () a))
+       `(lambda ,(let ((a args)) (if (eqv? a ()) () a))
           ,@(ac-body* body (append (ac-arglist args) env))))))
 
 ; does an fn arg list use optional parameters or destructuring?
@@ -518,8 +517,8 @@
                       (list ,@(map (lambda (x) (ac x env)) args)))))))
 
 (define (ac-mac-call m args env)
-  (let ((x1 (apply m (map ac-niltree args))))
-    (let ((x2 (ac (ac-denil x1) env)))
+  (let ((x1 (apply m args)))
+    (let ((x2 (ac x1 env)))
       x2)))
 
 ; returns #f or the macro function
@@ -542,13 +541,10 @@
   (if (pair? e)
       (let ((m (ac-macro? (car e))))
         (if m
-            (let ((expansion (ac-denil (apply m (map ac-niltree (cdr e))))))
+            (let ((expansion (apply m (cdr e))))
               (if (ac-null? once) (ac-macex expansion) expansion))
             e))
       e))
-
-(define (ac-denil x)
-  x)
 
 ; is v lexically bound?
 
@@ -557,11 +553,6 @@
 
 (define (xcar x)
   (and (pair? x) (car x)))
-
-; #f and () -> nil for a whole quoted list/tree.
-
-(define (ac-niltree x)
-  x)
 
 ; The next two are optimizations, except work for macros.
 
@@ -695,20 +686,17 @@
       (fn arg1 arg2 arg3 arg4)
       (ar-apply fn (list arg1 arg2 arg3 arg4))))
 
-(define (ar-nil-terminate l)
-  l)
-
 ; turn the arguments to Arc apply into a list.
 ; if you call (apply fn 1 2 '(3 4))
 ; then args is '(1 2 (3 4 . nil) . ())
 ; that is, the main list is a scheme list.
 ; and we should return '(1 2 3 4 . ())
-; was once (apply apply list (ac-denil args))
-; but that didn't work for (apply fn nil)
+; was once (apply apply list args)
+; but that didn't work for (apply fn ())
 
 (define (ar-apply-args args)
   (cond ((ac-null? args) ())
-        ((ac-null? (cdr args)) (ar-nil-terminate (car args)))
+        ((ac-null? (cdr args)) (car args))
         (#t (cons (car args) (ar-apply-args (cdr args))))))
 
 
@@ -778,7 +766,7 @@
                          (map (lambda (a) (ar-coerce a 'string))
                               args)))
                  ((arc-list? (car args))
-                  (ac-niltree (apply append (map ar-nil-terminate args))))
+                  (apply append args))
                  (#t (apply + args)))))
 
 (define (char-or-string? x) (or (string? x) (char? x)))
@@ -787,7 +775,7 @@
   (cond ((char-or-string? x)
          (string-append (ar-coerce x 'string) (ar-coerce y 'string)))
         ((and (arc-list? x) (arc-list? y))
-         (ac-niltree (append (ar-nil-terminate x) (ar-nil-terminate y))))
+         (append x y))
         (#t (+ x y))))
 
 (xdef - -)
@@ -822,7 +810,7 @@
 (xdef len (lambda (x)
              (cond ((string? x) (string-length x))
                    ((hash-table? x) (hash-table-count x))
-                   (#t (length (ar-nil-terminate x))))))
+                   (#t (length x)))))
 
 (define (ar-tagged? x)
   (and (vector? x) (eq? (vector-ref x 0) 'tagged)))
@@ -841,7 +829,7 @@
   (cond ((ar-tagged? x)     (vector-ref x 1))
         ((pair? x)          'cons)
         ((symbol? x)        'sym)
-        ((ac-null? x)       'sym)
+        ((ac-null? x)          'sym)
         ((procedure? x)     'fn)
         ((char? x)          'char)
         ((string? x)        'string)
@@ -943,7 +931,7 @@
                   (cadr args)
                   (current-output-port))))
     (when (pair? args)
-      (f (ac-denil (car args)) port))
+      (f (car args) port))
     (unless explicit-flush (flush-output port)))
   ())
 
@@ -984,7 +972,7 @@
                       (else      (err "Can't coerce" x type))))
     ((string? x)    (case type
                       ((sym)     (string->symbol x))
-                      ((cons)    (ac-niltree (string->list x)))
+                      ((cons)    (string->list x))
                       ((num)     (or (apply string->number x args)
                                      (err "Can't coerce" x type)))
                       ((int)     (let ((n (apply string->number x args)))
@@ -995,7 +983,7 @@
     ((pair? x)      (case type
                       ((string)  (apply string-append
                                         (map (lambda (y) (ar-coerce y 'string))
-                                             (ar-nil-terminate x))))
+                                             x)))
                       (else      (err "Can't coerce" x type))))
     ((eqv? x ())  (case type
                       ((string)  "")
@@ -1097,7 +1085,7 @@
 
 ;(xdef table (lambda args
 ;               (fill-table (make-hash-table 'equal)
-;                           (if (pair? args) (ac-denil (car args)) ()))))
+;                           (if (pair? args) (car args) ()))))
 
 (define (fill-table h pairs)
   (if (eq? pairs ())
@@ -1120,7 +1108,7 @@
 (xdef rand random)
 
 (xdef dir (lambda (name)
-            (ac-niltree (map path->string (directory-list name)))))
+            (map path->string (directory-list name))))
 
 ; Would def mkdir in terms of make-directory and call that instead
 ; of system in ensure-dir, but make-directory is too weak: it doesn't
@@ -1171,7 +1159,7 @@
         (if (eqv? expr ':a)
             'done
             (let ((val (arc-eval expr)))
-              (write (ac-denil val))
+              (write val)
               (namespace-set-variable-value! '_that val)
               (namespace-set-variable-value! '_thatexpr expr)
               (newline)
@@ -1228,12 +1216,12 @@
           (lambda (op)
             (acompile1 ip op)))))))
 
-(xdef macex (lambda (e) (ac-macex (ac-denil e))))
+(xdef macex (lambda (e) (ac-macex e)))
 
-(xdef macex1 (lambda (e) (ac-macex (ac-denil e) 'once)))
+(xdef macex1 (lambda (e) (ac-macex e 'once)))
 
 (xdef eval (lambda (e)
-              (eval (ac (ac-denil e) ()))))
+              (eval (ac e ()))))
 
 ; If an err occurs in an on-err expr, no val is returned and code
 ; after it doesn't get executed.  Not quite what I had in mind.
@@ -1471,12 +1459,12 @@
 (xdef timedate
   (lambda args
     (let ((d (gmt-date (if (pair? args) (car args) (current-seconds)))))
-      (ac-niltree (list (date-second d)
-                        (date-minute d)
-                        (date-hour d)
-                        (date-day d)
-                        (date-month d)
-                        (date-year d))))))
+      (list (date-second d)
+            (date-minute d)
+            (date-hour d)
+            (date-day d)
+            (date-month d)
+            (date-year d)))))
 
 (xdef utf-8-bytes
   (lambda (str)
