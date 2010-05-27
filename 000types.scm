@@ -32,7 +32,8 @@
       (eq? x ())))
 
 (define (yfalse? x)
-  (_ac-null? x))
+  (or (eq? x #f)
+      (_ac-null? x)))
 (define (ytrue? x)
   (not (yfalse? x)))
 

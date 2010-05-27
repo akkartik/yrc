@@ -7,10 +7,15 @@
     should equal?
       2)
 
-(test "if works when test is true"
+(test "if works for #t test"
       (yeval '(if #t 3 0))
     should equal?
       3)
+
+(test "if works for #f test"
+      (yeval '(if #f 3 0))
+    should equal?
+      0)
 
 (define foo
   (let ((x 0))
