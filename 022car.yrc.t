@@ -7,3 +7,9 @@
       (cdr ())
     should equal?
       ())
+
+(define a '(3 4))
+(test "car operates on variables"
+      (car a)
+    should equal?
+      ())
