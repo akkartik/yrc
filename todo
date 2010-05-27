@@ -1,9 +1,9 @@
-overriding fns in yrc space:
-  fewer parens: let
-  take any number of args: +, map
+fewer parens: let
+transparent destructuring
+
+take any number of args: +, map
 
 optional args
-transparent destructuring
 
 generics: is, iso, len, prn
 any number of args: prn
