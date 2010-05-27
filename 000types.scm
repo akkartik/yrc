@@ -1,5 +1,4 @@
 (define t #t)
-; deprecated
 (define nil ())
 (define (_ac-null? x)
   (or (null? x)

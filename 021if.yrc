@@ -1,3 +1,6 @@
+(mac if args
+  `(cond ,@(_pair-pad-t args)))
+
 ($
   (define (_pair-pad-t l)
     (if (yfalse? l)
@@ -8,6 +11,3 @@
             (_pair-pad-t (if (yfalse? (cdr l))
                            ()
                            (cddr l)))))))
-
-(mac if args
-  `(cond ,@(_pair-pad-t args)))
