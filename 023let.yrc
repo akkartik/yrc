@@ -1,2 +1,4 @@
 (mac let(var val . body)
-  `((lambda(,var) ,@body) ,val))
+  (if (cons? var)
+    `(apply (lambda ,var ,@body) ,val)
+    `((lambda(,var) ,@body) ,val)))
