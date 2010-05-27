@@ -10,8 +10,8 @@
     should equal?
       3)
 
-(display ($ (ytrans '(def foo6((a b)) a))))
-;? (test "def destructures"
-;?       (foo6 '(3 4))
-;?     should equal?
-;?       3)
+(def foo6((a b)) a)
+(test "def destructures"
+      (foo6 '(3 4))
+    should equal?
+      3)
