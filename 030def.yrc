@@ -1,7 +1,7 @@
 (mac def(name args . body)
   (if (_complex-args? args)
     (let* ([ra  (gensym)]
-           [z   (_complex-args args ra)])
+           [z   (list '$ (_complex-args args ra))])
       (display "foo: ")(display z) (newline)
       `(define ,name
          (lambda ,ra

@@ -50,7 +50,9 @@
 
 ; not guaranteed to converge; that's up to the transforms
 (define (converge expr transforms)
+  (display "aaa:")(display expr)(newline)
   (let ([new  (_apply-all-transforms-once expr transforms)])
+    (display "bbb:")(display new)(newline)
     (if (equal? expr new)
       expr
       (converge new transforms))))
