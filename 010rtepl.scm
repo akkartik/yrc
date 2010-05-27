@@ -1,5 +1,10 @@
 ; read Transform eval print loop
 
+(define-syntax $
+  (syntax-rules()
+    [($ x)
+     x]))
+
 ; lists of functions of one argument; beware infinite loops
 (define functional-transforms ())
 (define atom-transforms ())
@@ -19,7 +24,7 @@
 (define (ytrans expr)
   (cond
     [(null? expr)   ()]
-    [(and (list? expr) (eq? (car expr) '$))   (cadr expr)]
+    [(and (list? expr) (eq? (car expr) '$))   expr]
     [(and (list? expr) (symbol? (car expr)))  (map ytrans (_ftrans expr))]
     [(list? expr)   (map ytrans expr)]
     ; atoms
