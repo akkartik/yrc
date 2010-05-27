@@ -1,6 +1,33 @@
 (mac def(name args . body)
-  (if args
-    `(define ,(cons name args)
-       ,@body)
-    `(define (,name)
-       ,@body)))
+  (if (_complex-args? args)
+    (let* ([ra  (gensym)]
+           [z   (_complex-args args ra)])
+      `(define ,name
+         (lambda ,ra
+           (let* ,z
+             ,@body))))
+    `(define ,name
+       (lambda ,args
+         ,@body))))
+
+($ (begin
+  (define (_complex-args? args)
+    (cond
+      [(equal? args ())  nil]
+      [(symbol? args)    nil]
+      [(and (pair? args) (symbol? (car args)))   (_complex-args? (cdr args))]
+      [t t]))
+
+  ; returns a list of two-element lists, first is variable name,
+  ; second is (compiled) expression. to be used in a let.
+  ; ra is the rest argument to the fn.
+  ; is-params indicates that args are function arguments
+  ;   (not destructuring), so they must be passed or be optional.
+
+  (define (_complex-args args ra)
+    (cond [(_ac-null? args)  ()]
+          [(symbol? args)    (list (list args ra))]
+          [(pair? args)      (append (_complex-args (car args) `(car ,ra))
+                                     (_complex-args (cdr args) `(cdr ,ra)))]
+          [#t (err "Can't understand fn arg list" args)]))
+))
