@@ -48,9 +48,15 @@
     (let ([new  ((car transforms) expr)])
       (_apply-all-transforms-once new (cdr transforms)))))
 
+(define show-trans? #f)
+
 ; not guaranteed to converge; that's up to the transforms
 (define (converge expr transforms)
+  (when show-trans?
+    (display "--- ")(display expr)(newline))
   (let ([new  (_apply-all-transforms-once expr transforms)])
+    (when show-trans?
+      (display "... ")(display new)(newline))
     (if (equal? expr new)
       expr
       (converge new transforms))))
