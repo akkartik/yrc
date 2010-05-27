@@ -1,10 +1,10 @@
+(set! testa (hash-copy macros*))
+
 (mac foo (a) `(+ 1 ,a))
 (test "macro call expands"
       (ytrans '(foo 3))
     should equal?
       '(begin (+ 1 3)))
-
-(set! testa (hash-copy macros*))
 
 (define (foo2 a) a)
 (mac foo3 (a) `(+ 1 ,(foo2 a)))
