@@ -12,4 +12,4 @@
 (test "car operates on variables"
       (car a)
     should equal?
-      ())
+      3)

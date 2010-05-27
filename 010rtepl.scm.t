@@ -17,6 +17,6 @@
 (test "$ suppresses transformation"
       (ytrans '(+ 2 ($ (+ 3 5))))
     should equal?
-      '(list + 2 (+ 3 5)))
+      '(list + 2 ($ (+ 3 5))))
 
 (set! functional-transforms (cdr functional-transforms))
