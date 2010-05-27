@@ -1,0 +1,13 @@
+($
+  (define (_pair-pad-t l)
+    (if (yfalse? l)
+      '()
+      (cons (if (yfalse? (cdr l))
+              (list #t (car l))
+              (list (car l) (cadr l)))
+            (_pair-pad-t (if (yfalse? (cdr l))
+                           '()
+                           (cddr l)))))))
+
+(mac if args
+  `(cond ,@(_pair-pad-t args)))

@@ -1,6 +1,6 @@
 ; deprecated
 (define nil ())
-(define (ac-null? x)
+(define (_ac-null? x)
   (or (null? x)
       (eq? 'nil x)))
 
@@ -9,7 +9,7 @@
         [(macro? x)         'macro]
         [(pair? x)          'cons]
         [(symbol? x)        'sym]
-        [(ac-null? x)       'sym]     ; holdover from arc
+        [(_ac-null? x)       'sym]     ; holdover from arc
         [(procedure? x)     'fn]
         [(char? x)          'char]
         [(string? x)        'string]
@@ -31,7 +31,9 @@
       (eq? x ())))
 
 (define (yfalse? x)
-  (ac-null? x))
+  (_ac-null? x))
+(define (ytrue? x)
+  (not (yfalse? x)))
 
 (define (tagged? x)
   (and (vector? x) (eq? (vector-ref x 0) 'tagged)))

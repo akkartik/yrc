@@ -20,26 +20,37 @@
   (cond
     [(null? expr)   ()]
     [(and (list? expr) (eq? (car expr) '$))   (cadr expr)]
-    [(and (list? expr) (symbol? (car expr)))  (map ytrans (ftrans expr))]
+    [(and (list? expr) (symbol? (car expr)))  (map ytrans (_ftrans expr))]
     [(list? expr)   (map ytrans expr)]
     ; atoms
-    [#t             (atrans expr)]))
+    [#t             (_atrans expr)]))
 
-(define (ftrans expr)
+(define (yload filename)
+  (call-with-input-file filename _yload1))
+
+(define (_yload1 fd)
+  (let ([x  (read fd)])
+    (if (eof-object? x)
+      #t
+      (begin
+        (yeval x)
+        (_yload1 fd)))))
+
+(define (_ftrans expr)
   (converge expr functional-transforms))
 
-(define (atrans expr)
+(define (_atrans expr)
   (converge expr atom-transforms))
 
-(define (apply-all-transforms-once expr transforms)
+(define (_apply-all-transforms-once expr transforms)
   (if (yfalse? transforms)
     expr
     (let ([new  ((car transforms) expr)])
-      (apply-all-transforms-once new (cdr transforms)))))
+      (_apply-all-transforms-once new (cdr transforms)))))
 
 ; not guaranteed to converge; that's up to the transforms
 (define (converge expr transforms)
-  (let ([new  (apply-all-transforms-once expr transforms)])
+  (let ([new  (_apply-all-transforms-once expr transforms)])
     (if (equal? expr new)
       expr
       (converge new transforms))))

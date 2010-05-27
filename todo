@@ -4,8 +4,6 @@ overriding fns in yrc space:
   take any number of args: if, +, map
   fewer parens: let
 
-macex doesn't work
-
 optional args
 transparent destructuring
 
