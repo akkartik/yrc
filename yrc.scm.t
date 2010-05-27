@@ -8,6 +8,7 @@
        (display " got: ") (display a)
        (newline))]))
 
+(define (be-true a b) (not (yfalse? a)))
 (define (always-be-true a b) #t)
 (define dummy '_)
 ; preallocated vars to aid rollback
