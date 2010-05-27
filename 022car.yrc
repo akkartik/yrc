@@ -1,0 +1,9 @@
+(mac car(l)
+  (if (equal? l ())
+    ()
+    ($ (car l))))
+
+(mac cdr(l)
+  (if (equal? l ())
+    ()
+    ($ (cdr l))))

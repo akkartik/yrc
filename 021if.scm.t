@@ -4,5 +4,5 @@
 
 (test "if treats () as false"
       (yeval '(if () 1 2))
-    should eq?
+    should equal?
       2)
