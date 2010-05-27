@@ -2,7 +2,6 @@
   (if (_complex-args? args)
     (let* ([ra  (gensym)]
            [z   (list '$ (_complex-args args ra))])
-      (display "foo: ")(display z) (newline)
       `(define ,name
          (lambda ,ra
            (let* ,z
@@ -26,17 +25,9 @@
   ;   (not destructuring), so they must be passed or be optional.
 
   (define (_complex-args args ra)
-    (display "a: ")(display args)(newline)
-   (let
-   ((ans
     (cond [(_ac-null? args)  ()]
           [(symbol? args)    (list (list args ra))]
           [(pair? args)      (append (_complex-args (car args) `(car ,ra))
                                      (_complex-args (cdr args) `(cdr ,ra)))]
-          [#t (err "Can't understand fn arg list" args)])
-   ))
-   (display "ret: ")(display ans)(newline)
-   ans
-   )
-  )
+          [#t (err "Can't understand fn arg list" args)]))
 ))
