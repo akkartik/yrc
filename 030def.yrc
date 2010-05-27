@@ -1,6 +1,6 @@
 (mac def(name args . body)
-  (if (yfalse? args)
-    `(define (,name)
-       ,@body)
+  (if args
     `(define ,(cons name args)
+       ,@body)
+    `(define (,name)
        ,@body)))
