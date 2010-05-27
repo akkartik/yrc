@@ -1,0 +1,14 @@
+overriding fns in yrc space:
+  car/cdr operate on ()
+  if treats () as false
+  take any number of args: if, +, map
+  fewer parens: let
+
+macex doesn't work
+
+optional args
+transparent destructuring
+
+generics: is, iso, len, prn
+any number of args: prn
+unquote for $
