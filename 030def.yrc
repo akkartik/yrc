@@ -27,7 +27,22 @@
   (define (_complex-args args ra)
     (cond [(_ac-null? args)  ()]
           [(symbol? args)    (list (list args ra))]
+          [(_first-optional? args)   (_complex-opt args ra)]
           [(pair? args)      (append (_complex-args (car args) `(car ,ra))
                                      (_complex-args (cdr args) `(cdr ,ra)))]
           [#t (err "Can't understand fn arg list" args)]))
+
+  (define (_first-optional? l)
+    (and (pair? l)
+         (pair? (car l))
+         (equal? 'o (caar l))))
+
+  (define (_complex-opt args ra)
+    (let ([var    (cadar args)]
+          [expr   (if (pair? (cddar args))
+                    (caddar args)
+                    ())])
+      (list (list var `(if (pair? ,ra)
+                         (car ,ra)
+                         ,expr)))))
 ))
