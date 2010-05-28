@@ -37,6 +37,7 @@
 
 (mac fn(args . body)
   (display "args: ")(display args)(newline)
+  (display (_complex-args? args))(newline)
   (if (_complex-args? args)
     (let* ([ra  (gensym)]
            [z   (_complex-args args ra)])

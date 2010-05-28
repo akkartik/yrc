@@ -1,12 +1,14 @@
 (define-syntax test
   (syntax-rules(should)
     [(test msg a should fn b)
-     (unless (fn a b)
-       (display "F ") (display msg)
-       (newline)
-       (display "    expected: ") (display b)
-       (display " got: ") (display a)
-       (newline))]))
+     (if (fn a b)
+       (begin
+         (display ". ")(display msg)(newline))
+       (begin
+         (display "F ")(display msg)(newline)
+         (display "    expected: ") (display b)
+         (display " got: ") (display a)
+         (newline)))]))
 
 (define (be-true a b) (not (yfalse? a)))
 (define (always-be-true a b) #t)
