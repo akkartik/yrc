@@ -1,5 +1,3 @@
-def: optional args, transparent destructuring
-
 take any number of args: +, map, prn
 generics: is, iso, len, prn
 unquote for $
