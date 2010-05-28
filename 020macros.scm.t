@@ -29,23 +29,4 @@
     should equal?
       4)
 
-(define n '(23 24 25))
-(mac foo7(a)
-  `(car ,a))
-(mac foo8(a)
-  (display "a: ")(display a)(newline)
-  `(foo7 ,a))
-(test ""
-      (yeval '(foo8 n))
-    should equal?
-      23)
-
-(mac fn0(args)
-  (display "args: ")(display args)(newline)
-  `(blah ,args))
-(mac def0(name args)
-  `(define name (fn0 ,args)))
-
-(display (macex '(def0 foo6((a b)))))(newline)
-
 (set! macros* testa)
