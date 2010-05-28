@@ -1,5 +1,6 @@
 ($ (begin
   (define (_complex-args? args)
+    (display "crgs: ")(display args)(newline)
     (cond
       [(equal? args ())  nil]
       [(symbol? args)    nil]
@@ -48,4 +49,5 @@
        ,@body)))
 
 (mac def(name args . body)
+  (display "Args: ")(display args)(newline)
   `(define ,name (fn ,args ,@body)))

@@ -35,7 +35,7 @@
       ((fn((a b) (o n 28)) (+ a b n)) '(3 4) 12)
     should equal?
       19)
-(test "fn handles destructuring and optional args at once"
+(test "fn handles destructuring and optional args at once - 2"
       ((fn((a b) (o n 28)) (+ a b n)) '(3 4))
     should equal?
       35)
@@ -54,7 +54,9 @@
     should equal?
       3)
 
+(display (macex '(def foo6((a b)) a)))(newline)
 (def foo6((a b)) a)
+(display (macex '(foo6 '(3 4))))(newline)
 (test "def destructures"
       (foo6 '(3 4))
     should equal?
@@ -85,7 +87,7 @@
       (foo9 '(3 4) 12)
     should equal?
       19)
-(test "def handles destructuring and optional args at once"
+(test "def handles destructuring and optional args at once - 2"
       (foo9 '(3 4))
     should equal?
       35)
