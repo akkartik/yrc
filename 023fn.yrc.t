@@ -54,9 +54,7 @@
     should equal?
       3)
 
-(display (macex '(def foo6((a b)) a)))(newline)
 (def foo6((a b)) a)
-(display (macex '(foo6 '(3 4))))(newline)
 (test "def destructures"
       (foo6 '(3 4))
     should equal?
