@@ -11,10 +11,11 @@
   (time (repeat 20 randpos.a)))
 
 (mac fn0(args)
+  (prn args)
   `(blah ,args))
 (mac def0(name args)
   `(define ,name (fn0 ,args)))
-(prn (macex '(def0 a b)))
+(def0 a b)
 
 
 (quit)

@@ -36,6 +36,7 @@
 ))
 
 (mac fn(args . body)
+  (display args)(newline)
   (if (_complex-args? args)
     (let* ([ra  (gensym)]
            [z   (_complex-args args ra)])
@@ -47,4 +48,4 @@
 
 (mac def(name args . body)
   `(define ,name (fn ,args ,@body)))
-(display (macex '(def foo((a b)) a)))(newline)
+(def a b)
