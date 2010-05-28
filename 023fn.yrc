@@ -36,8 +36,7 @@
 ))
 
 (mac fn(args . body)
-  (display "a: ")(display args)(newline)
-  (display (_complex-args? args))(newline)
+  (display "args: ")(display args)(newline)
   (if (_complex-args? args)
     (let* ([ra  (gensym)]
            [z   (_complex-args args ra)])
@@ -47,26 +46,5 @@
     `(lambda ,args
        ,@body)))
 
-(mac def0(name args . body)
-  (if (_complex-args? args)
-    (let* ([ra  (gensym)]
-           [z   (_complex-args args ra)])
-      `(define ,name
-         (lambda ,ra
-           (let* ,z
-             ,@body))))
-    `(define ,name
-       (lambda ,args
-         ,@body))))
 (mac def(name args . body)
   `(define ,name (fn ,args ,@body)))
-
-;? (display (ytrans '(def0 a((b c)) b)))
-;? (newline)
-(display (macex '(fn((b c)) b)))
-(newline)
-;? (display (macex '(define a (fn((b c)) b))))
-;? (newline)
-;? (set! show-trans? #t)
-(display (macex '(def a((b c)) b)))
-(newline)
