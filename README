@@ -1,0 +1,12 @@
+There's two attempts here at rethinking arc (http://arclanguage.org) - and
+they're different languages, at different levels of functionality:
+
+1. From the bottom up:
+  mzscheme -f yrc.scm
+Includes yrc.* and [0-9]*. More experimental.
+To run the automated tests:
+  yrc> (load "yrc.scm.t")
+
+2. From the top down:
+  mzscheme -f as.scm
+Includes the remaining, more traditionally arc, files.
